@@ -35,7 +35,7 @@ export const Sidebar: React.FC = () => {
           <a href="#">★日記 (工事中)</a>
         </li>
         <li style={{ marginBottom: '25px', display: 'flex', alignItems: 'center' }}>
-          <a href="/bbs">★掲示板</a>
+          <a href="/#bbs">★掲示板</a>
           <img src={msAbU} alt="" style={{ marginLeft: '6px', display: 'inline-block', flexShrink: 0 }} />
         </li>
         <li style={{ marginBottom: '25px', display: 'flex', alignItems: 'center' }}>

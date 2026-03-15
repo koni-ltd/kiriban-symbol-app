@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { Counter } from './components/Counter';
 import { BBS } from './components/BBS';
@@ -7,6 +7,15 @@ import bgImg from './assets/bg-img.png';
 import mainTitleImg from './assets/main-title.png';
 import wBackImg from './assets/w_back.gif';
 import wHomeImg from './assets/w_home.gif';
+
+const isBBSRoute = () => {
+  if (typeof window === 'undefined') return false;
+
+  const path = window.location.pathname.replace(/\/$/, '');
+  const hash = window.location.hash.toLowerCase();
+
+  return path === '/bbs' || hash === '#bbs' || hash === '#/bbs';
+};
 
 const frameStyle: React.CSSProperties = {
   minHeight: '100vh',
@@ -123,7 +132,7 @@ const BBSPageContent: React.FC = () => {
       </div>
 
       <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'center' }}>
-        <a href="/index.html">
+        <a href="/">
           <img src={wBackImg} alt="トップページへ戻る" />
         </a>
       </div>
@@ -132,10 +141,17 @@ const BBSPageContent: React.FC = () => {
 };
 
 export default function App() {
-  const path = typeof window !== 'undefined' ? window.location.pathname : '/';
-  const isBBSPage = path === '/bbs';
+  const [isBBSPage, setIsBBSPage] = useState(isBBSRoute);
 
   useEffect(() => {
+    const syncRoute = () => {
+      setIsBBSPage(isBBSRoute());
+    };
+
+    syncRoute();
+    window.addEventListener('hashchange', syncRoute);
+    window.addEventListener('popstate', syncRoute);
+
     const handleContextMenu = (event: MouseEvent) => {
       event.preventDefault();
       window.alert('右クリックは禁止です。');
@@ -143,6 +159,8 @@ export default function App() {
 
     document.addEventListener('contextmenu', handleContextMenu);
     return () => {
+      window.removeEventListener('hashchange', syncRoute);
+      window.removeEventListener('popstate', syncRoute);
       document.removeEventListener('contextmenu', handleContextMenu);
     };
   }, []);
